@@ -35,6 +35,12 @@ jobs:
           echo "Last modified file version: $version"
           echo "{version}={$version}" >> $GITHUB_OUTPUT
 
+      - name: test
+        id: test
+        run: |
+          echo "${{ steps.getfile.outputs.filename }}"
+          echo "${{ steps.getfile.outputs.version }}"
+
       - name: Create Release
         id: create_release
         uses: ncipollo/release-action@v1
@@ -43,3 +49,5 @@ jobs:
           omitBody: true
           tag: ${{ steps.getfile.outputs.filename }}
           name: ${{ steps.getfile.outputs.version }}
+          allowUpdates: true
+          makeLatest: true
