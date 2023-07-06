@@ -15,9 +15,6 @@ module.exports = {
   description:
     "A behavior that extends the animation capabilities of Spritefont and text",
   // icon: "icon.svg", // defaults to "icon.svg" if omitted
-  domSideScripts: [
-    // "domSide.js", // no need to include "c3runtime/" prefix
-  ],
   fileDependencies: [
     /*
     {
