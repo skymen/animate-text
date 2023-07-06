@@ -30,10 +30,10 @@ jobs:
         run: |
           last_modified_file=$(ls -Art dist | tail -n 1)
           echo "Last modified file: $last_modified_file"
-          echo "{filename}={$last_modified_file}" >> $GITHUB_OUTPUT
+          echo "filename=$last_modified_file" >> $GITHUB_OUTPUT
           version=$(echo $last_modified_file | sed -n 's/.*-\([0-9.]*\).c3addon/\1/p')
           echo "Last modified file version: $version"
-          echo "{version}={$version}" >> $GITHUB_OUTPUT
+          echo "version=$version" >> $GITHUB_OUTPUT
 
       - name: test
         id: test
