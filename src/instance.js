@@ -403,6 +403,27 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
     }
   }
 
+  self.globalThis.SFDXUtilsFunctions = self.globalThis.SFDXUtilsFunctions || {
+    cos,
+    sin,
+    random,
+    hslToRgb,
+    hsltorgb,
+    colorToHex,
+    colortohex,
+    lerpColor,
+    lerpcolor,
+    lerpHexColor,
+    lerphexcolor,
+    lerpUnlerp,
+    lerpunlerp,
+    unlerp,
+    lerp,
+    EasingFunctions,
+    easingfunctions: EasingFunctions,
+    c3easing,
+  };
+
   return class extends parentClass {
     constructor(behInst, properties) {
       super(behInst);
