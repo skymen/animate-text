@@ -1244,6 +1244,20 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
                 params[i] = Number(params[i]);
               }
             }
+            params = params.map((x) => {
+              let x2 = x.trim().toLowerCase();
+              if (x2 === "true") return true;
+              if (x2 === "false") return false;
+              if (x2 === "null") return null;
+              if (x2 === "undefined") return undefined;
+              if (x2.startsWith("array")) {
+                let arr = x.split("(");
+                let arr2 = arr[1].split(")");
+                let arr3 = arr2[0].split(",");
+                return arr3;
+              }
+              return x;
+            });
             params.unshift(null);
             this.AnimFunctions[tag] = fn.bind.apply(fn, params);
           } else {
