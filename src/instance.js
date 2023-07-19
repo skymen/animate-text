@@ -403,6 +403,10 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
     }
   }
 
+  function array(...args) {
+    return args;
+  }
+
   self.globalThis.SFDXUtilsFunctions = self.globalThis.SFDXUtilsFunctions || {
     cos,
     sin,
@@ -422,6 +426,7 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
     EasingFunctions,
     easingfunctions: EasingFunctions,
     c3easing,
+    array,
   };
 
   return class extends parentClass {
@@ -478,7 +483,7 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
             body: "random(magnitude)",
           },
           {
-            name: "animatedIcon",
+            name: "animatedicon",
             params: "icons, speed",
             body: "icons[Math.floor(t*speed)%icons.length]",
           },
@@ -1192,7 +1197,8 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
 
     getAnimFunction(tag) {
       if (!this.AnimFunctions.hasOwnProperty(tag)) {
-        let regex = /^[\d\w]+(\([^()]*\))?$/g;
+        // let regex = /^[\d\w]+(\([^()]*\))?$/g;
+        let regex = /^[\d\w]+(\(.*\))?$/g;
         tag = tag.trim();
         let found = regex.test(tag);
         if (found) {
@@ -1207,12 +1213,31 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
           var fn = this._inst._objectType._SFDXAliasFunctions[name];
 
           if (arr.length > 1) {
-            var params = arr[1]
-              .slice(0, -1)
-              .split(",")
-              .map(function (s) {
-                return s.trim();
-              });
+            // var params = arr
+            //   .slice(1)
+            //   .join("(")
+            //   .slice(0, -1)
+            //   .split(",")
+            //   .map(function (s) {
+            //     return s.trim();
+            //   });
+            var params = [];
+            var str = arr.slice(1).join("(").slice(1, -1);
+
+            let curParam = "";
+            let stack = 0;
+            for (let i = 0; i < str.length; i++) {
+              if (str[i] === "(") {
+                stack++;
+              } else if (str[i] === ")") {
+                stack--;
+              } else if (str[i] === "," && stack === 0) {
+                params.push(curParam.trim());
+                curParam = "";
+                continue;
+              }
+              curParam += str[i];
+            }
             for (let i = 0; i < params.length; i++) {
               if (!isNaN(Number(params[i]))) {
                 params[i] = Number(params[i]);
