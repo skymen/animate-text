@@ -1222,7 +1222,7 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
             //     return s.trim();
             //   });
             var params = [];
-            var str = arr.slice(1).join("(").slice(1, -1);
+            var str = arr.slice(1).join("(").slice(0, -1);
 
             let curParam = "";
             let stack = 0;
@@ -1238,6 +1238,7 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
               }
               curParam += str[i];
             }
+            params.push(curParam.trim());
             for (let i = 0; i < params.length; i++) {
               if (!isNaN(Number(params[i]))) {
                 params[i] = Number(params[i]);
