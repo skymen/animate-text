@@ -861,7 +861,7 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
               //console.log(innerText)
               str += innerText;
             } else {
-              for (let i = 0; i < el[1].length; i++) {
+              if (el[1].length == 0) {
                 let end = "";
                 el[0].forEach((tag) => {
                   let val;
@@ -872,14 +872,28 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
                     end = "[/" + tag[0] + "]" + end;
                   }
                 });
-                let innerText = "";
-                let tmp = el[1][i];
-                if (typeof tmp != "string") {
-                  innerText += tmp();
-                } else {
-                  innerText = tmp;
+                str += end;
+              } else {
+                for (let i = 0; i < el[1].length; i++) {
+                  let end = "";
+                  el[0].forEach((tag) => {
+                    let val;
+                    if (typeof tag[1] === "function") val = tag[1](time, i);
+                    else val = tag[1];
+                    if (!this.IsConditionalTag(tag[0]) || val) {
+                      str += "[" + tag[0] + "=" + val + "]";
+                      end = "[/" + tag[0] + "]" + end;
+                    }
+                  });
+                  let innerText = "";
+                  let tmp = el[1][i];
+                  if (typeof tmp != "string") {
+                    innerText += tmp();
+                  } else {
+                    innerText = tmp;
+                  }
+                  str += innerText + end;
                 }
-                str += innerText + end;
               }
             }
           });
