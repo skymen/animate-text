@@ -911,10 +911,16 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
           fragProp = "_fragments";
         }
         let handler = (frag) => {
+          if (frag.hasOwnProperty("_chArr")) prop = "_chArr";
+          else if (frag.hasOwnProperty("chArr")) prop = "chArr";
+          else if (frag.hasOwnProperty("text")) prop = "text";
+
           if (prop === "text" && frag.hasOwnProperty("text")) {
             start += frag.text;
+          } else if (prop === "chArr" && frag.hasOwnProperty("chArr")) {
+            start += frag.chArr.join("");
           } else {
-            prop = "chArr";
+            prop = "_chArr";
             start += frag.chArr.join("");
           }
         };
