@@ -1351,12 +1351,8 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
 
       push(JSON.parse(JSON.stringify(currentTag)), currentText);
 
-      let isSoloTag = (tag) => {
-        return this.IsSoloTag(tag);
-      };
-
       function push(tag, text) {
-        if (text == "" && !isSoloTag(tag)) return;
+        if (text == "" && !self.IsSoloTag(tag)) return;
 
         var tagArray = [];
 
