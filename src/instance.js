@@ -477,6 +477,11 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
             params: "magnitude",
             body: "random(magnitude)",
           },
+          {
+            name: "animatedIcon",
+            params: "icons, speed",
+            body: "icons[Math.floor(t*speed)%icons.length]",
+          },
         ].forEach((defaultAlias) => {
           let { name, params, body } = defaultAlias;
           this.DefineAlias(name, params, body);
@@ -682,6 +687,10 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
 
     IsConditionalTag(tag) {
       return ["hide", "b", "i", "u", "s", "stroke"].includes(tag);
+    }
+
+    IsSoloTag(tag) {
+      return ["icon"].includes(tag);
     }
 
     GetTwEasingFunction() {
@@ -892,14 +901,23 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
       if (lines.length > 1) {
         let start = "";
         let prop = "text";
-        lines[0].fragments.forEach((frag) => {
+        let fragProp = "fragments";
+        if (!lines[0].fragments) {
+          prop = "_fragments";
+        }
+        let handler = (frag) => {
           if (prop === "text" && frag.hasOwnProperty("text")) {
             start += frag.text;
           } else {
             prop = "chArr";
             start += frag.chArr.join("");
           }
-        });
+        };
+        if (fragProp === "fragments") {
+          lines[0].fragments.forEach(handler);
+        } else {
+          lines[0]._fragments.forEach(handler);
+        }
         while (
           text.length > 0 &&
           (text.startsWith(start) || start.startsWith(text))
@@ -909,13 +927,18 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
           text = text.slice(start.length).trimStart();
           if (lines.length > 0) {
             start = "";
-            lines[0].fragments.forEach((frag) => {
+            let handler2 = (frag) => {
               if (prop === "text") {
                 start += frag.text;
               } else {
                 start += frag.chArr.join("");
               }
-            });
+            };
+            if (fragProp === "fragments") {
+              lines[0].fragments.forEach(handler2);
+            } else {
+              lines[0]._fragments.forEach(handler2);
+            }
           }
         }
       }
@@ -1328,8 +1351,12 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
 
       push(JSON.parse(JSON.stringify(currentTag)), currentText);
 
+      let isSoloTag = (tag) => {
+        return this.IsSoloTag(tag);
+      };
+
       function push(tag, text) {
-        if (text == "") return;
+        if (text == "" && !isSoloTag(tag)) return;
 
         var tagArray = [];
 
