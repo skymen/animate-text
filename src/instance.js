@@ -908,7 +908,7 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
         let prop = "text";
         let fragProp = "fragments";
         if (lines[0]._fragments) {
-          prop = "_fragments";
+          fragProp = "_fragments";
         }
         let handler = (frag) => {
           if (prop === "text" && frag.hasOwnProperty("text")) {
