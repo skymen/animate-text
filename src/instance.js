@@ -921,7 +921,7 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
             start += frag.chArr.join("");
           } else {
             prop = "_chArr";
-            start += frag.chArr.join("");
+            start += frag._chArr.join("");
           }
         };
         if (fragProp === "fragments") {
@@ -941,8 +941,10 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
             let handler2 = (frag) => {
               if (prop === "text") {
                 start += frag.text;
-              } else {
+              } else if (prop === "chArr") {
                 start += frag.chArr.join("");
+              } else {
+                start += frag._chArr.join("");
               }
             };
             if (fragProp === "fragments") {
