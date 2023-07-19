@@ -444,6 +444,7 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
             ? properties[2]
             : easingNames[properties[1]];
       }
+
       this.curTypedWidth = "";
       this.curTypedHeight = "";
       this.text = "";
