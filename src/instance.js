@@ -1245,6 +1245,7 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
               }
             }
             params = params.map((x) => {
+              if (typeof x !== "string") return x;
               let x2 = x.trim().toLowerCase();
               if (x2 === "true") return true;
               if (x2 === "false") return false;
