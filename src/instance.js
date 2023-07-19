@@ -1402,7 +1402,8 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
       push(JSON.parse(JSON.stringify(currentTag)), currentText);
 
       function push(tag, text) {
-        if (text == "" && !self.IsSoloTag(tag)) return;
+        let tagNames = tag.map((x) => x.split(" ")[0]);
+        if (text == "" && !tagNames.some((x) => self.IsSoloTag(x))) return;
 
         var tagArray = [];
 
