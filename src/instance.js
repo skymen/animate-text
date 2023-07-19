@@ -865,7 +865,7 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
                 let end = "";
                 el[0].forEach((tag) => {
                   let val;
-                  if (typeof tag[1] === "function") val = tag[1](time, i);
+                  if (typeof tag[1] === "function") val = tag[1](time, -1);
                   else val = tag[1];
                   if (!this.IsConditionalTag(tag[0]) || val) {
                     str += "[" + tag[0] + "=" + val + "]";
