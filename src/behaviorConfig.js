@@ -577,7 +577,6 @@ module.exports = {
     */
     "is-typing": {
       category: "typewriter",
-      scriptName: "IsTyping",
       handler: `function () {
         return this.typewriterActive && !this.typewriterPaused;
       }`,
@@ -590,7 +589,6 @@ module.exports = {
     },
     "on-letter-typed": {
       category: "typewriter",
-      scriptName: "OnLetterTyped",
       handler: `function () {
         return true;
       }`,
@@ -604,7 +602,6 @@ module.exports = {
     },
     "on-tw-pause": {
       category: "typewriter",
-      scriptName: "OnTwPause",
       handler: `function () {
         return true;
       }`,
@@ -618,7 +615,6 @@ module.exports = {
     },
     "on-tw-resume": {
       category: "typewriter",
-      scriptName: "OnTwResume",
       handler: `function () {
         return true;
       }`,
@@ -632,7 +628,6 @@ module.exports = {
     },
     "on-tw-start": {
       category: "typewriter",
-      scriptName: "OnTwStart",
       handler: `function () {
         return true;
       }`,
@@ -646,7 +641,6 @@ module.exports = {
     },
     "on-tw-stop": {
       category: "typewriter",
-      scriptName: "OnTwStop",
       handler: `function () {
         return true;
       }`,

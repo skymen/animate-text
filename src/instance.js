@@ -758,7 +758,7 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
                 this.typewriterPaused = true;
                 delete this.TWData.data[id].pause;
                 this.Trigger(
-                  C3.Behaviors.skymen_Skymen_SpritefontDX.Cnds.OnTwPause
+                  C3.Behaviors.skymen_Skymen_SpritefontDX.Cnds.onTwPause
                 );
               }
               if (
@@ -819,7 +819,7 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
                 this.LastLetterID = id;
                 this.LastLetter = this.getTextWithNoTags(str)[id];
                 this.Trigger(
-                  C3.Behaviors.skymen_Skymen_SpritefontDX.Cnds.OnLetterTyped
+                  C3.Behaviors.skymen_Skymen_SpritefontDX.Cnds.onLetterTyped
                 );
                 word = true;
                 this.curTypedWidth = str;
@@ -840,7 +840,7 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
           ) {
             //TW END
             this.SetDrawMaxCharacterCount(-1);
-            this.Trigger(C3.Behaviors.skymen_Skymen_SpritefontDX.Cnds.OnTwStop);
+            this.Trigger(C3.Behaviors.skymen_Skymen_SpritefontDX.Cnds.onTwStop);
             this.typewriterActive = false;
           }
 
@@ -1105,7 +1105,7 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
         start += curData.type;
         this.TWData.data.push(curData);
       }
-      this.Trigger(C3.Behaviors.skymen_Skymen_SpritefontDX.Cnds.OnTwStart);
+      this.Trigger(C3.Behaviors.skymen_Skymen_SpritefontDX.Cnds.onTwStart);
     }
 
     isAString(text) {
@@ -1170,7 +1170,7 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
 
       if (i === this.TWData.data.length) {
         this.SetDrawMaxCharacterCount(-1);
-        this.Trigger(C3.Behaviors.skymen_Skymen_SpritefontDX.Cnds.OnTwStop);
+        this.Trigger(C3.Behaviors.skymen_Skymen_SpritefontDX.Cnds.onTwStop);
         this.typewriterActive = false;
       } else {
         this.TWTime = this.TWData.start[i][0];
@@ -1505,12 +1505,12 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
     }
     _PauseTw() {
       this.typewriterPaused = true;
-      this.Trigger(self.C3.Behaviors.skymen_Skymen_SpritefontDX.Cnds.OnTwPause);
+      this.Trigger(self.C3.Behaviors.skymen_Skymen_SpritefontDX.Cnds.onTwPause);
     }
     _ResumeTw() {
       this.typewriterPaused = false;
       this.Trigger(
-        self.C3.Behaviors.skymen_Skymen_SpritefontDX.Cnds.OnTwResume
+        self.C3.Behaviors.skymen_Skymen_SpritefontDX.Cnds.onTwResume
       );
     }
     _SetTwParams(params) {
