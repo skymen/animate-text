@@ -52,6 +52,11 @@ function camelCasify(str) {
   return result;
 }
 
+function PascalCasify(str) {
+  str = camelCasify(str);
+  return str.charAt(0).toUpperCase() + str.substring(1);
+}
+
 function getFileListFromConfig(config) {
   const files = [];
 
