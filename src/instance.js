@@ -936,7 +936,7 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
             start += frag.chArr.join("");
           } else {
             prop = "_chArr";
-            start += frag._chArr.join("");
+            start += (frag._chArr || []).join("");
           }
         };
         if (fragProp === "fragments") {
@@ -959,7 +959,7 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
               } else if (prop === "chArr") {
                 start += frag.chArr.join("");
               } else {
-                start += frag._chArr.join("");
+                start += (frag._chArr || []).join("");
               }
             };
             if (fragProp === "fragments") {
