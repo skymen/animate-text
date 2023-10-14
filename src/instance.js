@@ -1342,7 +1342,7 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
             if (this.IsSoloTag(a[0])) {
               text = text.replace(
                 match[0],
-                "[sfdx=" + a[0] + ' "' + a[1] + '"][/sfdx]'
+                "[sfdx=" + a[0] + ' "' + a[1] + '"] [/sfdx]'
               );
             } else {
               text = text.replace(
