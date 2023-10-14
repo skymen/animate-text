@@ -1339,10 +1339,22 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
           if (sfdxAliases.includes(a[0].toLowerCase())) {
             text = text.replace(match[0], "[sfdx=" + a[1] + "]");
           } else {
-            text = text.replace(match[0], "[sfdx=" + a[0] + ' "' + a[1] + '"]');
+            if (this.IsSoloTag(a[0])) {
+              text = text.replace(
+                match[0],
+                "[sfdx=" + a[0] + ' "' + a[1] + '"][/sfdx]'
+              );
+            } else {
+              text = text.replace(
+                match[0],
+                "[sfdx=" + a[0] + ' "' + a[1] + '"]'
+              );
+            }
           }
         } else {
-          text = text.replace(match[0], "[/sfdx]");
+          if (!this.IsSoloTag(match[1])) {
+            text = text.replace(match[0], "[/sfdx]");
+          }
         }
         regex.lastIndex = 0;
       }
