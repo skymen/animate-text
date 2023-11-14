@@ -8,7 +8,7 @@ function getScriptInterface(parentClass, map) {
     linkDictionary(dictionary) {
       const inst = map.get(this);
       if (dictionary.getFirstInstance) {
-        dictionnary = dictionary.getFirstInstance();
+        dictionary = dictionary.getFirstInstance();
       }
       inst.linkedDictionnaryUID = dictionary.uid;
       inst.linkedDictionnary = inst._runtime

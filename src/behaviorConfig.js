@@ -3,7 +3,7 @@ module.exports = {
   addonType: "behavior",
   id: "skymen_Skymen_SpritefontDX",
   name: "Animate Text",
-  version: "1.1.0.9",
+  version: "1.1.1.0",
   category:
     // "attributes",
     // "movements",

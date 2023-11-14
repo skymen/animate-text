@@ -568,6 +568,8 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
         ),
 
         linkedDictionnaryUID: this.linkedDictionnaryUID,
+
+        additionalFragments: this.additionalFragments,
       };
     }
 
@@ -599,6 +601,10 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
       this._SFDXAliasFunctions = this.specialJSONparse(o._SFDXAliasFunctions);
 
       this.linkedDictionnaryUID = o.linkedDictionnaryUID;
+
+      if (o.hasOwnProperty("additionalFragments")) {
+        this.additionalFragments = o.additionalFragments;
+      }
     }
 
     Trigger(method) {
@@ -666,12 +672,17 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
       switch (tag) {
         case "offsetx":
         case "offsety":
+        case "iconoffsetx":
+        case "iconoffsety":
           return 0;
         case "opacity":
           return 100;
         case "scale":
         case "scalex":
         case "scaley":
+        case "iconscale":
+        case "iconscalex":
+        case "iconscaley":
           return 1;
         case "color":
           return (
@@ -697,6 +708,13 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
 
     IsSoloTag(tag) {
       return ["icon"].includes(tag);
+    }
+
+    TagIsWorthNbFragments(tag) {
+      let worth = {
+        icon: 1,
+      };
+      return worth.hasOwnProperty(tag) ? worth[tag] : 0;
     }
 
     GetTwEasingFunction() {
@@ -741,6 +759,7 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
         var word = false;
         if (this.typewriterActive) {
           let id = 0;
+          // let lastLetterIsNotText = false;
           this.parsedText.forEach((el) => {
             for (let i = 0; i < el[1].length; i++) {
               let tags = {};
@@ -791,8 +810,14 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
               });
 
               let end = "";
-
-              Object.keys(tags).forEach((tag) => {
+              let tagKeys = Object.keys(tags);
+              // make tags that are worth more fragments be put later in the list
+              tagKeys.sort((a, b) => {
+                return (
+                  this.TagIsWorthNbFragments(a) - this.TagIsWorthNbFragments(b)
+                );
+              });
+              tagKeys.forEach((tag) => {
                 if (!["wait", "fade", "type", "pause"].includes(tag)) {
                   if (!this.IsConditionalTag(tag) || tags[tag]) {
                     str += "[" + tag + "=" + tags[tag] + "]";
@@ -832,8 +857,23 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
 
               id++;
             }
+            // if (el[1].length === 0) {
+            //   el[0].forEach((tag) => {
+            //     if (this.IsSoloTag(tag[0]))
+            //       [(str += "[" + tag[0] + "=" + tag[1] + "]")];
+            //   });
+            // }
           });
-          this.SetDrawMaxCharacterCount(this.LastLetterID, str);
+
+          let offset = 0;
+          this.additionalFragments.forEach((frag) => {
+            if (frag.rawId > this.LastLetterID) {
+              return;
+            }
+            offset = frag.offset;
+          });
+
+          this.SetDrawMaxCharacterCount(this.LastLetterID + offset, str);
 
           if (
             this.TWTime >= this.TWData.start[this.TWData.start.length - 1][1]
@@ -867,7 +907,10 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
                   let val;
                   if (typeof tag[1] === "function") val = tag[1](time, -1);
                   else val = tag[1];
-                  if (!this.IsConditionalTag(tag[0]) || val) {
+                  if (
+                    !this.IsSoloTag(tag[0]) &&
+                    (!this.IsConditionalTag(tag[0]) || val)
+                  ) {
                     str += "[" + tag[0] + "=" + val + "]";
                     end = "[/" + tag[0] + "]" + end;
                   }
@@ -1059,6 +1102,33 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
       this.curTypedWidth = "";
       this.curTypedHeight = "";
       let pureText = this.getTextWithNoTags(this.text);
+
+      this.additionalFragments = [];
+      let curFragmentOffset = 0;
+      let curFragmentId = 0;
+      this.parsedText.forEach((el) => {
+        // The additionalFragments array contains a list of object that contain the position of the fragment and how much it is worth
+        if (el[1].length === 0) {
+          return;
+        }
+        let curWorth = 0;
+
+        el[0].forEach((tag) => {
+          curWorth += this.TagIsWorthNbFragments(tag[0]);
+        });
+
+        if (curWorth > 0) {
+          this.additionalFragments.push({
+            rawId: curFragmentId,
+            id: curFragmentId - curFragmentOffset,
+            offset: curFragmentOffset + curWorth,
+            worth: curWorth,
+          });
+          curFragmentOffset += curWorth;
+        }
+
+        curFragmentId += el[1].length;
+      });
       let start = 0;
       this.TWData = {
         start: [],
@@ -1104,6 +1174,13 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
 
         start += curData.type;
         this.TWData.data.push(curData);
+
+        /* if (this.additionalFragments.length > 0) {
+          if (this.additionalFragments[0].id === i) {
+            let af = this.additionalFragments.shift();
+            i -= af.worth;
+          }
+        } */
       }
       this.Trigger(C3.Behaviors.skymen_Skymen_SpritefontDX.Cnds.onTwStart);
     }
@@ -1196,6 +1273,10 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
         regex.lastIndex = 0;
       }
       return text;
+    }
+
+    getTextWithNoTagsButWithFragmentMetaData(text) {
+      // TODO
     }
 
     getTextWithNoTW(text) {
@@ -1342,7 +1423,11 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
             if (this.IsSoloTag(a[0])) {
               text = text.replace(
                 match[0],
-                "[sfdx=" + a[0] + ' "' + a[1] + '"] [/sfdx]'
+                "[sfdx=" +
+                  a[0] +
+                  ' "' +
+                  a[1] +
+                  '"][sfdx=scale 0] [/sfdx][/sfdx]'
               );
             } else {
               text = text.replace(
@@ -1354,6 +1439,8 @@ function getInstanceJs(parentClass, scriptInterface, addonTriggers, C3) {
         } else {
           if (!this.IsSoloTag(match[1])) {
             text = text.replace(match[0], "[/sfdx]");
+          } else {
+            text = text.replace(match[0], "");
           }
         }
         regex.lastIndex = 0;
